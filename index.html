@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status dos Serviços</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .grid-container {   
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .grid-item {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .grid-item img {
+            max-width: 80px;
+            margin-bottom: 10px;
+        }
+        .grid-item h3 {
+            margin: 10px 0;
+            font-size: 18px;
+            color: #333;
+        }
+        .status {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        .stable {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .unstable {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container" id="service-grid">
+        <!-- Os serviços serão inseridos aqui dinamicamente pelo JavaScript -->
+    </div>
+
+    <script>
+        const services = [
+            { name: 'YouTube', id: 'youtube' },
+            { name: 'Prime Video', id: 'amazon-prime-instant-video' },
+            { name: 'Disney+', id: 'disney-plus' },
+            { name: 'Netflix', id: 'netflix' },
+            { name: 'Spotify', id: 'spotify' },
+            { name: 'TikTok', id: 'tiktok' },
+            { name: 'HBO Max', id: 'hbo-max' },
+            { name: 'WhatsApp', id: 'whatsapp-messenger' },
+            { name: 'Telegram', id: 'telegram' },
+            { name: 'Instagram', id: 'instagram' },
+            { name: 'Gmail', id: 'gmail' },
+            { name: 'Discord', id: 'discord' },
+            { name: 'Twitter', id: 'twitter' },
+            { name: 'Messenger', id: 'facebook-messenger' },
+            { name: 'Facebook', id: 'facebook' },
+            { name: 'Zoom', id: 'zoom' },
+            { name: 'Steam', id: 'steam' },
+            { name: 'PlayStation', id: 'playstation-network-psn' },
+            { name: 'League of Legends', id: 'league-of-legends' },
+            { name: 'Valorant', id: 'valorant' },
+            { name: 'Fortnite', id: 'fortnite' },
+            { name: 'World of Warcraft', id: 'world-of-warcraft' },
+            { name: 'FIFA', id: 'fifa-ea-sports' },
+            { name: 'Tim', id: 'tim-brasil' },
+            { name: 'Vivo', id: 'vivo-brasil' },
+            { name: 'Oi', id: 'oi-brasil' },
+            { name: 'Algar', id: 'algar-telecom' },
+            { name: 'Claro', id: 'claro-brasil' }
+        ];
+
+        async function checkStatus(service) {
+            try {
+                const response = await fetch(`/check-status/${service.id}`);
+                if (!response.ok) {
+                    throw new Error("Erro ao buscar status do serviço");
+                }
+                const data = await response.json();
+                return {
+                    name: service.name,
+                    logo: data.logo_url || '',
+                    status: data.status
+                };
+            } catch (error) {
+                return {
+                    name: service.name,
+                    logo: '',
+                    status: 'indisponível'
+                };
+            }
+        }
+
+        async function loadServices() {
+            document.getElementById('service-grid').innerHTML = ''; // Limpa o grid
+            for (const service of services) {
+                const { name, logo, status } = await checkStatus(service);
+
+                const item = document.createElement('div');
+                item.classList.add('grid-item');
+
+                const img = document.createElement('img');
+                img.src = logo;
+                img.alt = name;
+
+                const title = document.createElement('h3');
+                title.textContent = name;
+
+                const statusDiv = document.createElement('div');
+                statusDiv.textContent = status;
+                statusDiv.classList.add('status', status === 'estável' ? 'stable' : 'unstable');
+
+                item.appendChild(img);
+                item.appendChild(title);
+                item.appendChild(statusDiv);
+
+                document.getElementById('service-grid').appendChild(item);
+            }
+        }
+
+        function startAutoRefresh() {
+            setInterval(() => {
+                loadServices();
+            }, 3000000); // Atualiza a cada 5 minutos (300000 ms)
+        }
+
+        window.onload = () => {
+            loadServices(); // Carrega os serviços ao iniciar
+            startAutoRefresh(); // Inicia o processo de autoatualização
+        };
+    </script>
+</body>
+</html>
