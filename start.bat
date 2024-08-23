@@ -1,4 +1,4 @@
 @echo off
-cd C:\work_dir\content-monitor
-call venv\Scripts\activate  (se estiver usando um ambiente virtual)
+call python3 -m venv venv
+call venv\Scripts\activate  
 fastapi dev main.py
