@@ -50,7 +50,6 @@
 </head>
 <body>
     <div class="grid-container" id="service-grid">
-        <!-- Os serviços serão inseridos aqui dinamicamente pelo JavaScript -->
     </div>
 
     <script>
@@ -107,7 +106,7 @@
         }
 
         async function loadServices() {
-            document.getElementById('service-grid').innerHTML = ''; // Limpa o grid
+            document.getElementById('service-grid').innerHTML = ''; 
             for (const service of services) {
                 const { name, logo, status } = await checkStatus(service);
 
@@ -136,12 +135,12 @@
         function startAutoRefresh() {
             setInterval(() => {
                 loadServices();
-            }, 3000000); // Atualiza a cada 5 minutos (300000 ms)
+            }, 3000000); 
         }
 
         window.onload = () => {
-            loadServices(); // Carrega os serviços ao iniciar
-            startAutoRefresh(); // Inicia o processo de autoatualização
+            loadServices(); 
+            startAutoRefresh(); 
         };
     </script>
 </body>
